@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Banking</title>
+	<link rel="stylesheet" type="text/css" href="#"/>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body>
+
+<form method="post" action="" id="formToSave">
+    <dl>
+        <dt>First Name:</dt>
+        <dd><input type="text" id="nameField" placeholder="First Name" /></dd>
+        <dt>Last Name:</dt>
+        <dd><input type="text" id="lastNameField" placeholder="Last Name" /></dd>
+        <dt>Gender:</dt>
+        <dd><input type="radio" checked="checked" name="gender" value="M" id="genderMale" />
+            Male
+            <input type="radio" checked="checked" name="gender" value="F" />
+            Female
+		<dt>Social Security #:</dt>
+		<dd><input type="text" id="socialSecurity" placeholder="SS#" /></dd>
+    </dl>
+    <p><input id="submitLink" type="button" value="Save as TXT"></input></p>
+	<a href="my-download.json"><input id="showData" type="button" value="Show Data"></input></a>
+</form>
+
+
+
+<script>
+var saveData=(function(){
+	var a = document.createElement("a");
+	document.body.appendChild(a);
+	a.style="display:none";
+	return function(data,fileName){
+		var json=JSON.stringify(data),
+			blob=new Blob([json], {type:"octet/stream"}),
+			url=window.URL.createObjectURL(blob);
+		a.href=url;
+		a.download=fileName;
+		a.click();
+		window.URL.revokeObjectURL(url);
+	};
+}());
+
+function buildData(){
+	var txtData="Name: " +$("#nameField").val()+
+            ", Last Name: "+$("#lastNameField").val()+
+			", SS: "+$("#socialSecurity").val()+
+            ", Gender: "+($("#genderMale").is(":checked")?"Male":"Female")+", Account Number: "+accountLength();
+	return txtData;
+}
+
+	
+var submitButton = document.getElementById("submitLink");
+
+submitButton.addEventListener("click",function(){
+	var data = buildData();
+	var fileName="my-download.json";
+	saveData(data,fileName);
+});
+
+
+function Person(first, last, ss, account) {
+    this.firstName = first;
+    this.lastName = last;
+    this.ss = ss;
+    this.account = account;
+}
+
+function genNum(){
+	a=(Math.floor((Math.random())*111));
+	if(a<10){return a};
+	if(a>9 && a<36){
+		var actNum=range(10,35,1);
+		var numEq=range(97,122,1);
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>35&&a<62){
+		var actNum=range(36,61,1);
+		var numEq=range(65,90,1);
+		return"&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>61&&a<72){
+		var actNum=range(62,71,1);
+		var numEq=range(48,57,1);		
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>71&&a<82){
+		var actNum=range(72,81,1);
+		var numEq=range(48,57,1);
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>81&&a<92){
+		var actNum=range(82,91,1);
+		var numEq=range(48,57,1);
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>91&&a<102){
+		var actNum=range(92,101,1);
+		var numEq=range(48,57,1);
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+	if(a>101&&a<112){
+		var actNum=range(102,111,1);
+		var numEq=range(48,57,1);
+		return "&#"+numEq[actNum.indexOf(a)]+";";
+	}
+}
+
+function range(start, stop, step){
+	var a=[start], b=start;
+	while(b<stop){b+=step,a.push(b)}
+	return a;
+}
+
+function accountLength(){
+	var accountNum=[];
+	var totalLength=(Math.floor(Math.random()*10));
+	while(totalLength<21){
+		accountNum.push(genNum());
+		totalLength++;
+	}
+	return accountNum;
+}
+
+</script>
+</body>
